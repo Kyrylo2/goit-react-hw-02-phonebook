@@ -1,11 +1,18 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
+// import styled from '@emotion/styled';
+// import PropTypes from 'prop-types';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 import { nanoid } from 'nanoid';
-// model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"
+import styled from 'styled-components';
+import * as yup from 'yup';
 
-const FormStyle = styled.form`
+const schema = yup.object().shape({
+  name: yup.string().required().min(2),
+  number: yup.string().required().min(10),
+});
+
+const FormStyled = styled(Form)`
   display: flex;
   gap: 20px;
   flex-direction: column;
@@ -19,12 +26,7 @@ const Lable = styled.label`
   align-items: center;
 `;
 
-const TitleH3 = styled.h2`
-  font-size: 14px;
-  text-align: center;
-`;
-
-class Form extends React.Component {
+class ContactsForm extends React.Component {
   state = {
     name: '',
     number: '',
@@ -36,55 +38,84 @@ class Form extends React.Component {
     // console.log(this.state);
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.onSubmit(this.state, nanoid());
-    this.resetState();
+  handleSubmit = (value, { resetForm }) => {
+    // e.preventDefault();
+    console.log(value);
+    this.props.onSubmit(value, nanoid());
+    resetForm();
   };
 
-  resetState = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
+  // resetState = () => {
+  //   this.setState({
+  //     name: '',
+  //     number: '',
+  //   });
+  // };
 
   render() {
     return (
-      <FormStyle onSubmit={this.handleSubmit}>
-        <Lable>
-          <TitleH3>Name</TitleH3>
-          <input
-            type="text"
+      <Formik
+        initialValues={this.state}
+        onSubmit={this.handleSubmit}
+        validationSchema={schema}
+      >
+        {/* <TitleH3>Name</TitleH3> */}
+        <FormStyled autoComplete="off" onChange={this.handleStateChange}>
+          <Lable htmlFor="name">Full Name</Lable>
+          <Field
+            id="name"
             name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            placeholder="Jane Franklin"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
-            value={this.state.name}
-            onChange={this.handleStateChange}
           />
-        </Lable>
-        <Lable>
-          <TitleH3>Tel</TitleH3>
-          <input
+          <ErrorMessage name="name" component="div" />
+          <Lable htmlFor="number">Number</Lable>
+          <Field
+            id="number"
+            placeholder="050 442 12 34"
             type="tel"
             name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
-            value={this.state.number}
-            onChange={this.handleStateChange}
-          ></input>
-        </Lable>
-        <button type="submit">Add contact</button>
-      </FormStyle>
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          />
+          <ErrorMessage name="number" component="div" />
+          <button type="submit">Add contact</button>
+        </FormStyled>
+      </Formik>
+      // <FormStyle onSubmit={this.handleSubmit}>
+      //   <Lable>
+      //     <TitleH3>Name</TitleH3>
+      //     <input
+      //       type="text"
+      //       name="name"
+      //       pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+      //       title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+      //       required
+      //       value={this.state.name}
+      //       onChange={this.handleStateChange}
+      //     />
+      //   </Lable>
+      //   <Lable>
+      //     <TitleH3>Tel</TitleH3>
+      //     <input
+      //       type="tel"
+      //       name="number"
+      //       pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+      //       title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+      //       required
+      //       value={this.state.number}
+      //       onChange={this.handleStateChange}
+      //     ></input>
+      //   </Lable>
+      //   <button type="submit">Add contact</button>
+      // </FormStyle>
     );
   }
 }
 
-Form.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
+// ContactsForm.propTypes = {
+//   onSubmit: PropTypes.func.isRequired,
+// };
 
-export default Form;
+export default ContactsForm;

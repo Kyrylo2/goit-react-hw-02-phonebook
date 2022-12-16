@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from '../components/Form';
+import ContactsForm from '../components/Form';
 import Filter from '../components/Filter';
 import ContactList from '../components/ContactsList';
 import styled from '@emotion/styled';
@@ -52,7 +52,7 @@ class App extends React.Component {
     return (
       <>
         <TitleH1>Phonebook</TitleH1>
-        <Form onSubmit={this.getFormData} />
+        <ContactsForm onSubmit={this.getFormData} />
         <Filter filterDataToState={this.setFilterToState} />
         <ContactList
           contacts={this.contactsFilterData(this.state.contacts)}
