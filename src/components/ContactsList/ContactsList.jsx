@@ -1,35 +1,52 @@
 import React from 'react';
-import styled from '@emotion/styled';
+// import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 
-const ContactListDiv = styled.ul`
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  align-items: center;
-`;
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/material/styles';
 
-const TitleH2 = styled.h2`
-  text-align: center;
-`;
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 const ContactList = ({ contacts, onDelete }) => {
   return (
-    <>
-      <TitleH2>Contacts</TitleH2>
-      <ContactListDiv>
-        {contacts.map(({ name, number, id }) => {
-          return (
-            <li key={id}>
-              <p>
-                {name} {number}
-              </p>
-              <button onClick={() => onDelete(id)}>Delete</button>
-            </li>
-          );
-        })}
-      </ContactListDiv>
-    </>
+    <Stack
+      direction="column"
+      divider={<Divider orientation="horizontal" flexItem />}
+      spacing={1}
+      sx={{ alignItems: 'center' }}
+    >
+      {contacts.map(({ name, number, id }) => {
+        return (
+          <Item
+            sx={{ width: 'fit-content', display: 'flex', gap: '20px' }}
+            key={id}
+          >
+            <p>
+              ✅ {name} {number}
+            </p>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => onDelete(id)}
+              color="error"
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </Item>
+        );
+      })}
+    </Stack>
   );
 };
 
